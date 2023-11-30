@@ -1,32 +1,26 @@
-def machine():
-    # creating key strings
+import streamlit as st
+
+def machine(message, mode):
     keys = 'abcdefghijklmnopqrstuvwxyz !'
-    # auto generating the vaules of strings
-    # value will be generted by taking last to first
-    # concatinated with the rest of the string
     values = keys[-1] + keys[0:-1]
-    # print(keys)
-    # print(values)
 
-    # creating two dictionaries
-    encrytDict = dict(zip(keys, values))
-    decryptDict = dict(zip(values, keys))
+    encrypt_dict = dict(zip(keys, values))
+    decrypt_dict = dict(zip(values, keys))
 
-    # user input
-    message = input("Enter your secret message: ")
-    mode = input("Crypto Mode : Encode(E) OR Decode(D)")
-
-    #encode and decode
-    if mode.upper() == 'E':
-        newMessage = ''.join([encrytDict[letter]
-                              for letter in message.lower()])
-    elif mode.upper() == 'D':
-        newMessage = ''.join([decryptDict[letter]
-                              for letter in message.lower()])
+    if mode.lower() == 'encode':
+        new_message = ''.join([encrypt_dict[letter] for letter in message.lower()])
+    elif mode.lower() == 'decode':
+        new_message = ''.join([decrypt_dict[letter] for letter in message.lower()])
     else:
-        print("Please try again, wrong choice entered")
+        return "Please try again, wrong choice entered"
 
-    return newMessage.capitalize()
+    return new_message.capitalize()
 
+st.title("Encryption/Decryption Machine")
 
-print(machine())
+message = st.text_input("Enter your secret message:")
+mode = st.radio("Crypto Mode:", ('Encode', 'Decode'))
+
+if st.button("Submit"):
+    result = machine(message, mode)
+    st.success(f"Result: {result}")
